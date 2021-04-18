@@ -38,11 +38,7 @@ _CITATION = """
 }
 """
 
-_DOWNLOAD_DRIVE_BASE_URL = "https://drive.google.com/uc?export=download&id="
-_DRIVE_URL = _DOWNLOAD_DRIVE_BASE_URL + "1yFp82cBUh6qWr2zq0_67AewqwtkngtG3"
-# futuramente gerar apartir do link do drive
-# com https://github.com/wkentaro/gdown/issues/96
-_URL = _DRIVE_URL
+_KAGGLE_DATA = "cjinny/mura-v11"
 
 
 class Dataset(tfds.core.GeneratorBasedBuilder):
@@ -78,7 +74,8 @@ class Dataset(tfds.core.GeneratorBasedBuilder):
     ) -> Dict[str, Iterator[Tuple[str, Dict[str, Union[Path, str]]]]]:
         """Returns SplitGenerators."""
 
-        path = dl_manager.download_and_extract(_URL)
+        path = dl_manager.download_kaggle_data(_KAGGLE_DATA)
+        print(path)
 
         return {
             "train": self._generate_examples(path / "train"),

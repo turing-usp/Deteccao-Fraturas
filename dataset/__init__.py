@@ -1,3 +1,3 @@
-"""dataset dataset."""
+"""MURA dataset."""
 
 from .dataset import Dataset
