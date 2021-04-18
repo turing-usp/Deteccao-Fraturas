@@ -40,7 +40,7 @@ _CITATION = """
 _KAGGLE_DATA = "cjinny/mura-v11"
 
 
-class Dataset(tfds.core.GeneratorBasedBuilder):
+class Mura(tfds.core.GeneratorBasedBuilder):
     """DatasetBuilder for MURA dataset."""
 
     VERSION = tfds.core.Version("1.0.0")
