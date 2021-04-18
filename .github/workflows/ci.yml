@@ -12,8 +12,8 @@ jobs:
         uses: actions/setup-python@v2
 
       - name: Install dependencies
-        run: pip install pylint --no-cache-dir
+        run: pip install prospector\[with_everything\] --no-cache-dir
 
-      - name: Run pylint
-        run: pylint fracture_detection
+      - name: Run prospector
+        run: prospector
 
