@@ -1,5 +1,8 @@
 """MURA dataset."""
 
+from pathlib import Path
+from typing import Dict, Iterator, Tuple, Union
+
 import tensorflow_datasets as tfds
 
 _DESCRIPTION = """
@@ -35,6 +38,12 @@ _CITATION = """
 }
 """
 
+_DOWNLOAD_DRIVE_BASE_URL = "https://drive.google.com/uc?export=download&id="
+_DRIVE_URL = _DOWNLOAD_DRIVE_BASE_URL + "1yFp82cBUh6qWr2zq0_67AewqwtkngtG3"
+# futuramente gerar apartir do link do drive
+# com https://github.com/wkentaro/gdown/issues/96
+_URL = _DRIVE_URL
+
 
 class Dataset(tfds.core.GeneratorBasedBuilder):
     """DatasetBuilder for MURA dataset."""
@@ -46,7 +55,6 @@ class Dataset(tfds.core.GeneratorBasedBuilder):
 
     def _info(self) -> tfds.core.DatasetInfo:
         """Returns the MURA metadata."""
-        # TODO(dataset): Specifies the tfds.core.DatasetInfo object
         return tfds.core.DatasetInfo(
             builder=self,
             description=_DESCRIPTION,
@@ -65,21 +73,24 @@ class Dataset(tfds.core.GeneratorBasedBuilder):
             citation=_CITATION,
         )
 
-    def _split_generators(self, dl_manager: tfds.download.DownloadManager):
+    def _split_generators(
+        self, dl_manager: tfds.download.DownloadManager
+    ) -> Dict[str, Iterator[Tuple[str, Dict[str, Union[Path, str]]]]]:
         """Returns SplitGenerators."""
-        # TODO(dataset): Downloads the data and defines the splits
-        path = dl_manager.download_and_extract("https://todo-data-url")
 
-        # TODO(dataset): Returns the Dict[split names, Iterator[Key, Example]]
+        path = dl_manager.download_and_extract(_URL)
+
         return {
-            "train": self._generate_examples(path / "train_imgs"),
+            "train": self._generate_examples(path / "train"),
+            "valid": self._generate_examples(path / "valid"),
         }
 
-    def _generate_examples(self, path):
+    def _generate_examples(
+        self, path: Path
+    ) -> Iterator[Tuple[str, Dict[str, Union[Path, str]]]]:
         """Yields examples."""
-        # TODO(dataset): Yields (key, example) tuples from the dataset
-        for f in path.glob("*.jpeg"):
-            yield "key", {
+        for f in path.glob("*.png"):
+            yield f.name, {
                 "image": f,
-                "label": "yes",
+                "label": "normal" if "positive" in f.name else "abnormal",
             }
