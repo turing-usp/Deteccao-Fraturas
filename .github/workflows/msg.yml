@@ -1,0 +1,23 @@
+name: telegram message
+on: [pull_request]
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+
+    - uses: kceb/pull-request-url-action@v1
+      id: pr-url
+
+    - run: echo "${{ steps.pr-url.outputs.url }}"
+
+    - name: send custom message with args
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ -1001460906919 }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        args: Novo PR! ${{ steps.pr-url.outputs.url }}
+
