@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import Dict, Iterator, Tuple, Union
 
 import tensorflow_datasets as tfds
-
 _DESCRIPTION = """
 MURA (musculoskeletal radiographs) is a large dataset of bone X-rays.
 Algorithms are tasked with determining whether an X-ray study is normal
@@ -75,7 +74,7 @@ class Dataset(tfds.core.GeneratorBasedBuilder):
         """Returns SplitGenerators."""
 
         path = dl_manager.download_kaggle_data(_KAGGLE_DATA)
-        print(path)
+        path /= "MURA-v1.1"
 
         return {
             "train": self._generate_examples(path / "train"),
@@ -83,11 +82,13 @@ class Dataset(tfds.core.GeneratorBasedBuilder):
         }
 
     def _generate_examples(
-        self, path: Path
+        self, path: tfds.core.utils.gpath.PosixGPath
     ) -> Iterator[Tuple[str, Dict[str, Union[Path, str]]]]:
         """Yields examples."""
-        for f in path.glob("*.png"):
-            yield f.name, {
+
+        path = Path(path)
+        for f in path.glob("**/*.png"):
+            yield f.as_uri(), {
                 "image": f,
-                "label": "normal" if "positive" in f.name else "abnormal",
+                "label": "normal" if "positive" in f.as_uri() else "abnormal",
             }
