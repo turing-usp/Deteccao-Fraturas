@@ -1,2 +1,5 @@
-tfds-nightly
+h5py
+keras
+pyyaml
 tf-nightly
+tfds-nightly
