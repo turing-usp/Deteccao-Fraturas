@@ -1,12 +1,9 @@
 from os import PathLike
 from typing import Optional, Tuple
-
-import matplotlib.pyplot as plt
 import tensorflow as tf
 import tensorflow_datasets as tfds
-from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
+import fracture_detection.datasets.mura  # NOQA
 
-import fracture_detection.datasets.mura
 
 AUTOTUNE = tf.data.AUTOTUNE
 
@@ -32,14 +29,16 @@ def generate_model(
         x = data_augmentation_layers(inputs)
     x = rescale(x)
     x = base_model(x, training=False)
-    outputs = tf.keras.layers.Dense(1)(x)
+    if len(x.shape) > 2:
+        x = tf.keras.layers.Flatten()(x)
+    outputs = tf.keras.layers.Dense(1, activation='sigmoid')(x)
 
     model = tf.keras.Model(inputs, outputs)
 
     base_learning_rate = 0.0001
     model.compile(
         optimizer=tf.keras.optimizers.Adam(learning_rate=base_learning_rate),
-        loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+        loss=tf.keras.losses.BinaryCrossentropy(),
         metrics=["accuracy"],
     )
 
@@ -67,9 +66,9 @@ def train(
     img_shape: Tuple[Optional[int], Optional[int], Optional[int]],
     epochs: int = 20,
     batch_size: int = 8,
-    checkpoint_path: PathLike = "./training",
+    checkpoint_path: PathLike = "./training",  # NOQA (tipagem de python ainda é uma desgraça)
 ):
-    (ds_train, ds_valid) = tfds.load(
+    (ds_train, ds_valid) = tfds.load(  # NOQA (false positve)
         "mura",
         split=["train", "valid"],
         shuffle_files=True,

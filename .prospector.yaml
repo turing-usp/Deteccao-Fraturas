@@ -3,3 +3,8 @@ doc-warnings: false
 test-warnings: false
 autodetect: true
 member-warnings: false
+
+pylint:
+  disable:
+    - unsubscriptable-object # false positive in Optional[int]
+    - import-error # deixa muito lento os testes no CI
