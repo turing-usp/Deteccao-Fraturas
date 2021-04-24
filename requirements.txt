@@ -1,2 +1,2 @@
-tfds-nightly
 tf-nightly
+tfds-nightly
