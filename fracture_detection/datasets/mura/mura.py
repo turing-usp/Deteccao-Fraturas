@@ -1,9 +1,9 @@
 """MURA dataset."""
-
 from pathlib import Path
 from typing import Dict, Iterator, Tuple, Union
-
 import tensorflow_datasets as tfds
+
+
 _DESCRIPTION = """
 MURA (musculoskeletal radiographs) is a large dataset of bone X-rays.
 Algorithms are tasked with determining whether an X-ray study is normal
@@ -68,8 +68,9 @@ class Mura(tfds.core.GeneratorBasedBuilder):
             citation=_CITATION,
         )
 
+    @staticmethod
     def _split_generators(
-        self, dl_manager: tfds.download.DownloadManager
+        dl_manager: tfds.download.DownloadManager,
     ) -> Dict[str, Iterator[Tuple[str, Dict[str, Union[Path, str]]]]]:
         """Returns SplitGenerators."""
 
@@ -77,12 +78,13 @@ class Mura(tfds.core.GeneratorBasedBuilder):
         path /= "MURA-v1.1"
 
         return {
-            "train": self._generate_examples(path / "train"),
-            "valid": self._generate_examples(path / "valid"),
+            "train": Mura._generate_examples(path / "train"),
+            "valid": Mura._generate_examples(path / "valid"),
         }
 
+    @staticmethod
     def _generate_examples(
-        self, path: tfds.core.utils.gpath.PosixGPath
+        path: tfds.core.utils.gpath.PosixGPath,
     ) -> Iterator[Tuple[str, Dict[str, Union[Path, str]]]]:
         """Yields examples."""
 

@@ -1,5 +1,49 @@
-strictness: medium
+output-format: grouped
+
+strictness: veryhigh
 doc-warnings: false
 test-warnings: false
 autodetect: true
 member-warnings: false
+max-line-length: 120
+
+ignore-paths:
+  - docs/
+
+frosted:
+  run: false
+
+pyroma:
+  run: true
+
+mypy:
+  run: true
+  options:
+    ignore-missing-imports: true
+    follow-imports: skip
+
+pylint:
+  disable:
+    - bad-builtin
+    - too-few-public-methods
+    - missing-docstring
+    - star-args
+    - unsubscriptable-object # false positive in Optional[int]
+    - import-error # deixa muito lento os testes no CI
+  options:
+    good-names: x, f, ds
+
+pep8:
+  full: true
+  disable:
+    - E126
+
+pep257:
+  disable:
+    - D100
+    - D101
+    - D102
+    - D103
+    - D205
+    - D400
+    - D401
