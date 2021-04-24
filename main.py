@@ -1,3 +1,5 @@
+import pickle
+
 import tensorflow as tf
 
 from fracture_detection.train import generate_model
@@ -13,4 +15,7 @@ if __name__ == "__main__":
     model = generate_model(base_model, img_shape=IMG_SHAPE)
 
     model.summary()
-    train(model, epochs=20, img_shape=IMG_SHAPE)
+    history = train(model, epochs=20, img_shape=IMG_SHAPE)
+
+    with open('./train_history.pkl', 'wb') as f:
+        pickle.dump(history, f)
