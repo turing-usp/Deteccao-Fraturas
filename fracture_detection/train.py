@@ -16,7 +16,6 @@ def generate_model(
     data_augmentation_layers = tf.keras.Sequential(
         [
             tf.keras.layers.experimental.preprocessing.RandomFlip("horizontal"),
-            tf.keras.layers.experimental.preprocessing.RandomRotation(0.2),
         ]
     )
 
@@ -28,9 +27,8 @@ def generate_model(
     if data_augmentation:
         x = data_augmentation_layers(inputs)
     x = rescale(x)
-    x = base_model(x, training=False)
-    if len(x.shape) > 2:
-        x = tf.keras.layers.Flatten()(x)
+    x = base_model(x)
+    x = tf.keras.layers.GlobalAveragePooling2D()(x)
     outputs = tf.keras.layers.Dense(1, activation='sigmoid')(x)
 
     model = tf.keras.Model(inputs, outputs)
