@@ -30,6 +30,7 @@ def generate_model(
     x = rescale(x)
     x = base_model(x)
     x = tf.keras.layers.GlobalAveragePooling2D()(x)
+    x = tf.keras.layers.Dropout(0.2)(x)
     outputs = tf.keras.layers.Dense(1, activation='sigmoid')(x)
 
     model = tf.keras.Model(inputs, outputs)
