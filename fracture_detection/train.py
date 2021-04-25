@@ -16,6 +16,7 @@ def generate_model(
     data_augmentation_layers = tf.keras.Sequential(
         [
             tf.keras.layers.experimental.preprocessing.RandomFlip("horizontal"),
+            tf.keras.layers.experimental.preprocessing.RandomRotation(0.2),
         ]
     )
 
