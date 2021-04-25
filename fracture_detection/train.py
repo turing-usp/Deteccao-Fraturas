@@ -1,4 +1,4 @@
-from os import PathLike
+from pathlib import Path
 from typing import Optional, Tuple
 import tensorflow as tf
 import tensorflow_datasets as tfds
@@ -62,9 +62,9 @@ def _prepare_ds(
 def train(
     model: tf.keras.Model,
     img_shape: Tuple[Optional[int], Optional[int], Optional[int]],
+    checkpoint_path: Path,
     epochs: int = 20,
     batch_size: int = 8,
-    checkpoint_path: PathLike = "./training",  # NOQA (tipagem de python ainda é uma desgraça)
 ):
     (ds_train, ds_valid) = tfds.load(  # NOQA (false positve)
         "mura",
@@ -77,12 +77,15 @@ def train(
     ds_valid = _prepare_ds(ds_valid, img_shape=img_shape, batch_size=batch_size)
 
     cp_callback = tf.keras.callbacks.ModelCheckpoint(
-        filepath=checkpoint_path, verbose=1
+        filepath=checkpoint_path / "{epoch:04d}", verbose=1
+    )
+    cl_calback = tf.keras.callbacks.CSVLogger(
+        filename=checkpoint_path / "train.log"
     )
 
     return model.fit(
         ds_train,
         epochs=epochs,
         validation_data=ds_valid,
-        callbacks=[cp_callback],
+        callbacks=[cp_callback, cl_calback],
     )
