@@ -1,9 +1,10 @@
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
+
 import tensorflow as tf
 import tensorflow_datasets as tfds
-import fracture_detection.datasets.mura  # NOQA
 
+import fracture_detection.datasets.mura  # NOQA
 
 AUTOTUNE = tf.data.AUTOTUNE
 
@@ -11,8 +12,19 @@ AUTOTUNE = tf.data.AUTOTUNE
 def generate_model(
     base_model: tf.keras.Model,
     img_shape: Tuple[Optional[int], Optional[int], Optional[int]],
+    freeze: Union[bool, int, float] = False,
     data_augmentation: bool = True,
 ):
+    if isinstance(freeze, int):
+        freeze_len = freeze
+    elif isinstance(freeze, float):
+        freeze_len = int(freeze*len(base_model.layers))
+    else:  # isinstance(freeze, bool):
+        if freeze:
+            freeze_len = len(base_model.layers)
+        else:
+            freeze_len = 0
+
     data_augmentation_layers = tf.keras.Sequential(
         [
             tf.keras.layers.experimental.preprocessing.RandomFlip("horizontal"),
@@ -24,16 +36,27 @@ def generate_model(
         1.0 / 127.5, offset=-1
     )
 
+    # When you set layer.trainable = False, the BatchNormalization layer will
+    # run in inference mode, and will not update its mean and variance statistics
+    # https://www.tensorflow.org/tutorials/images/transfer_learning#important_note_about_batchnormalization_layers
+
     inputs = tf.keras.layers.Input(shape=img_shape)
     if data_augmentation:
         x = data_augmentation_layers(inputs)
     x = rescale(x)
-    x = base_model(x)
+    x = base_model(x, training=False)
     x = tf.keras.layers.GlobalAveragePooling2D()(x)
     x = tf.keras.layers.Dropout(0.2)(x)
     outputs = tf.keras.layers.Dense(1, activation='sigmoid')(x)
 
     model = tf.keras.Model(inputs, outputs)
+
+    if freeze_len != len(base_model.layers):
+        model.trainable = True
+        base_model.trainable = True
+
+        for layer in base_model.layers[:freeze_len]:
+            layer.trainable = False
 
     base_learning_rate = 0.0001
     model.compile(
