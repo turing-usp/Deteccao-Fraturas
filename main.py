@@ -7,6 +7,8 @@ from fracture_detection.train import generate_model, train
 IMG_SIZE = (224, 224)
 IMG_SHAPE = IMG_SIZE + (3,)
 
+tf.random.set_seed(0x0404)  # meu aniversario :)
+
 if __name__ == "__main__":
     base_model = tf.keras.applications.MobileNetV2(
         input_shape=IMG_SHAPE, include_top=False, weights="imagenet"
