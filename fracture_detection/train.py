@@ -110,6 +110,7 @@ def train(
     cl_calback = tf.keras.callbacks.CSVLogger(
         filename=checkpoint_path / "train.log"
     )
+    checkpoint_path.mkdir(parents=True, exist_ok=True)
 
     return model.fit(
         ds_train,
