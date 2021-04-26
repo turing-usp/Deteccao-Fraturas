@@ -82,7 +82,7 @@ def train(
     cp_callback = tf.keras.callbacks.ModelCheckpoint(
         filepath=checkpoint_path / "{epoch:04d}",
         verbose=1,
-        save_freq=save_freq*batch_size,
+        period=save_freq,
     )
     cl_calback = tf.keras.callbacks.CSVLogger(
         filename=checkpoint_path / "train.log"
