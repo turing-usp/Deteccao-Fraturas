@@ -67,6 +67,7 @@ def train(
     checkpoint_path: Path,
     epochs: int = 20,
     batch_size: int = 8,
+    save_freq: int = 5,
 ):
     (ds_train, ds_valid) = tfds.load(  # NOQA (false positve)
         "mura",
@@ -89,5 +90,6 @@ def train(
         ds_train,
         epochs=epochs,
         validation_data=ds_valid,
+        save_freq=save_freq*batch_size,
         callbacks=[cp_callback, cl_calback],
     )

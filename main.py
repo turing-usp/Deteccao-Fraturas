@@ -23,4 +23,5 @@ if __name__ == "__main__":
                     epochs=5,
                     img_shape=IMG_SHAPE,
                     batch_size=8,
+                    save_freq=5,
                     checkpoint_path=Path("./train_saves/mobilenetv2"))
