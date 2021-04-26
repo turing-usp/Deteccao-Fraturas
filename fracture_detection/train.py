@@ -102,13 +102,20 @@ def train(
     ds_train = _prepare_ds(ds_train, img_shape=img_shape, batch_size=batch_size)
     ds_valid = _prepare_ds(ds_valid, img_shape=img_shape, batch_size=batch_size)
 
-    cp_callback = tf.keras.callbacks.ModelCheckpoint(
+    cpp_callback = tf.keras.callbacks.ModelCheckpoint(
         filepath=checkpoint_path / "{epoch:04d}",
         verbose=1,
         period=save_freq,
     )
+    cpf_callback = tf.keras.callbacks.ModelCheckpoint(
+        filepath=checkpoint_path / "final",
+        period=save_freq,
+    )
     cl_calback = tf.keras.callbacks.CSVLogger(
         filename=checkpoint_path / "train.log"
+    )
+    es_calback = tf.keras.callbacks.EarlyStopping(
+        monitor='loss', min_delta=0.05, patience=3
     )
     checkpoint_path.mkdir(parents=True, exist_ok=True)
 
@@ -116,5 +123,5 @@ def train(
         ds_train,
         epochs=epochs,
         validation_data=ds_valid,
-        callbacks=[cp_callback, cl_calback],
+        callbacks=[cpp_callback, cpf_callback, cl_calback, es_calback],
     )
