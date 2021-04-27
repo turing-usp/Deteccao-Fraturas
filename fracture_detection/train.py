@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple, Union, Callable
 
 import tensorflow as tf
 import tensorflow_datasets as tfds
@@ -13,6 +13,7 @@ def generate_model(
     base_model: tf.keras.Model,
     img_shape: Tuple[Optional[int], Optional[int], Optional[int]],
     freeze: Union[bool, int, float] = False,
+    preprocess_input: Optional[Callable] = None,
     data_augmentation: bool = True,
 ):
     if isinstance(freeze, int):
@@ -32,10 +33,7 @@ def generate_model(
         ]
     )
 
-    rescale = tf.keras.layers.experimental.preprocessing.Rescaling(
-        1.0 / 127.5, offset=-1
-    )
-
+    # Obs:
     # When you set layer.trainable = False, the BatchNormalization layer will
     # run in inference mode, and will not update its mean and variance statistics
     # https://www.tensorflow.org/tutorials/images/transfer_learning#important_note_about_batchnormalization_layers
@@ -43,7 +41,8 @@ def generate_model(
     inputs = tf.keras.layers.Input(shape=img_shape)
     if data_augmentation:
         x = data_augmentation_layers(inputs)
-    x = rescale(x)
+    if preprocess_input is not None:
+        x = preprocess_input(inputs)
     x = base_model(x, training=False)
     x = tf.keras.layers.GlobalAveragePooling2D()(x)
     x = tf.keras.layers.Dropout(0.2)(x)
