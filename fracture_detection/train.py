@@ -103,12 +103,12 @@ def train(
     ds_valid = _prepare_ds(ds_valid, img_shape=img_shape, batch_size=batch_size)
 
     cpp_callback = tf.keras.callbacks.ModelCheckpoint(
-        filepath=checkpoint_path / "{epoch:04d}",
+        filepath=checkpoint_path / "{epoch:04d}.h5",
         verbose=1,
         period=save_freq,
     )
     cpf_callback = tf.keras.callbacks.ModelCheckpoint(
-        filepath=checkpoint_path / "final",
+        filepath=checkpoint_path / "final.h5",
         period=save_freq,
     )
     cl_calback = tf.keras.callbacks.CSVLogger(
