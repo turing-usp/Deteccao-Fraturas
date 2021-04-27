@@ -115,7 +115,7 @@ def train(
         filename=checkpoint_path / "train.log"
     )
     es_calback = tf.keras.callbacks.EarlyStopping(
-        monitor='loss', min_delta=0.05, patience=3
+        monitor='loss', min_delta=0.005, patience=3
     )
     checkpoint_path.mkdir(parents=True, exist_ok=True)
 
