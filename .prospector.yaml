@@ -26,6 +26,7 @@ pylint:
   disable:
     - bad-builtin
     - too-few-public-methods
+    - too-many-arguments
     - missing-docstring
     - star-args
     - unsubscriptable-object # false positive in Optional[int]
