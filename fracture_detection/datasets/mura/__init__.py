@@ -1,3 +1,3 @@
 """mura dataset."""
 
-from .mura import Mura
+from .mura import Mura  # NOQA

@@ -1,2 +1,7 @@
-tfds-nightly
+h5py
+kaggle
+keras
+numpy==1.19.5
+pyyaml
 tf-nightly
+tfds-nightly
