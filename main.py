@@ -2,7 +2,8 @@ from pathlib import Path
 
 import tensorflow as tf
 
-from fracture_detection.train import generate_model, train
+from fracture_detection.model.train import train
+from fracture_detection.model.generate import generate_model
 
 IMG_SIZE = (224, 224)
 IMG_SHAPE = IMG_SIZE + (3,)
