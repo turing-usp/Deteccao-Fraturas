@@ -1,10 +1,12 @@
 import tensorflow as tf
 from typing import Optional, Tuple, Union, Callable
 
-_data_augmentation = tf.keras.Sequential([
-    tf.keras.layers.experimental.preprocessing.RandomFlip("horizontal"),
-    tf.keras.layers.experimental.preprocessing.RandomRotation(0.2),
-])
+_data_augmentation = tf.keras.Sequential(
+    [
+        tf.keras.layers.experimental.preprocessing.RandomFlip("horizontal"),
+        tf.keras.layers.experimental.preprocessing.RandomRotation(0.2),
+    ]
+)
 
 
 def _freeze_model(
@@ -19,7 +21,7 @@ def _freeze_model(
     if isinstance(freeze, int):
         freeze_len = freeze
     elif isinstance(freeze, float):
-        freeze_len = int(freeze*len(model.layers))
+        freeze_len = int(freeze * len(model.layers))
     else:  # isinstance(freeze, bool):
         if freeze:
             freeze_len = len(model.layers)
@@ -48,7 +50,7 @@ def generate_model(
     x = base_model(x, training=False)
     x = tf.keras.layers.GlobalAveragePooling2D()(x)
     x = tf.keras.layers.Dropout(0.2)(x)
-    outputs = tf.keras.layers.Dense(1, activation='sigmoid')(x)
+    outputs = tf.keras.layers.Dense(1, activation="sigmoid")(x)
 
     model = tf.keras.Model(inputs, outputs)
 

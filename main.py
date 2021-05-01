@@ -15,17 +15,21 @@ if __name__ == "__main__":
         input_shape=IMG_SHAPE, include_top=False, weights="imagenet"
     )
 
-    model = generate_model(base_model,
-                           img_shape=IMG_SHAPE,
-                           preprocess_input=tf.keras.applications.vgg19.preprocess_input,
-                           freeze=0.75)
+    model = generate_model(
+        base_model,
+        img_shape=IMG_SHAPE,
+        preprocess_input=tf.keras.applications.vgg19.preprocess_input,
+        freeze=0.75,
+    )
     model.summary()
 
     base_model.trainable = True
 
-    history = train(model,
-                    epochs=50,
-                    img_shape=IMG_SHAPE,
-                    batch_size=32,
-                    save_freq=5,
-                    checkpoint_path=Path("./train_saves/vgg19_75p"))
+    history = train(
+        model,
+        epochs=50,
+        img_shape=IMG_SHAPE,
+        batch_size=32,
+        save_freq=5,
+        checkpoint_path=Path("./train_saves/vgg19_75p"),
+    )

@@ -8,6 +8,7 @@ import fracture_detection.datasets.mura  # NOQA
 
 AUTOTUNE = tf.data.AUTOTUNE
 
+
 def _prepare_ds(
     ds: tf.data.Dataset,
     img_shape: Tuple[Optional[int], Optional[int], Optional[int]],
@@ -19,7 +20,8 @@ def _prepare_ds(
 
     return (
         ds.map(prepare_img, num_parallel_calls=AUTOTUNE)
-        .batch(batch_size).prefetch(AUTOTUNE)
+        .batch(batch_size)
+        .prefetch(AUTOTUNE)
     )
 
 
@@ -41,10 +43,15 @@ def _train_calbacks(
         filename=checkpoint_path / "train.log"
     )
     early_stop_calback = tf.keras.callbacks.EarlyStopping(
-        monitor='loss', min_delta=0.005, patience=3
+        monitor="loss", min_delta=0.005, patience=3
     )
 
-    return [save_model_period_callback, save_model_callback, save_log_calback, early_stop_calback]
+    return [
+        save_model_period_callback,
+        save_model_callback,
+        save_log_calback,
+        early_stop_calback,
+    ]
 
 
 def train(
