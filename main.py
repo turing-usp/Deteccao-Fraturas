@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import tensorflow as tf
+import mlflow
 
 from fracture_detection.model.train import train
 from fracture_detection.model.generate import generate_model
@@ -9,6 +10,10 @@ IMG_SIZE = (224, 224)
 IMG_SHAPE = IMG_SIZE + (3,)
 
 tf.random.set_seed(0x0404)  # meu aniversario :)
+
+mlflow.set_tracking_uri("http://mlflow.grupoturing.com.br")
+mlflow.set_experiment("fraturing")
+mlflow.keras.autolog()
 
 if __name__ == "__main__":
     base_model = tf.keras.applications.VGG19(
