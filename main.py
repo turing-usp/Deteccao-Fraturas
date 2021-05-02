@@ -2,6 +2,7 @@ from pathlib import Path
 
 import tensorflow as tf
 import mlflow
+import mlflow.keras
 
 from fracture_detection.model.train import train
 from fracture_detection.model.generate import generate_model
